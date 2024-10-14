@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: llm-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: public
+  rules:
+  - host: localhost
+    http:
+      paths:
+      - path: /openai
+        pathType: Prefix
+        backend:
+          service:
+            name: openai
+            port:
+              number: 8000
+      - path: /llama
+        pathType: Prefix
+        backend:
+          service:
+            name: llama
+            port:
+              number: 8000
+      - path: /anthropic
+        pathType: Prefix
+        backend:
+          service:
+            name: anthropic
+            port:
+              number: 8000

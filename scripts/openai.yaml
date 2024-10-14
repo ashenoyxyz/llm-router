@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openai
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: openai
+  template:
+    metadata:
+      labels:
+        name: openai
+    spec:
+      containers:
+      - name: openai
+        image: localhost:32000/llm-service
+        env:
+          - name: LLM_TYPE
+            value: "OPENAI"
+        ports:
+        - name: http
+          containerPort: 8000
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openai
+spec:
+  type: ClusterIP
+  selector:
+    name: openai
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP

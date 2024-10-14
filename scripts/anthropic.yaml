@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anthropic
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: anthropic
+  template:
+    metadata:
+      labels:
+        name: anthropic
+    spec:
+      containers:
+      - name: anthropic
+        image: localhost:32000/llm-service
+        env:
+          - name: LLM_TYPE
+            value: "ANTHROPIC"
+        ports:
+        - name: http
+          containerPort: 8000
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: anthropic
+spec:
+  type: ClusterIP
+  selector:
+    name: anthropic
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
